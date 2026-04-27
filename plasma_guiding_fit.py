@@ -359,12 +359,14 @@ def plot_results(
     )
 
     # Mark secondary peaks (2 fmax, …)
+    # Use the data range to position labels rather than relying on auto y-limits
+    v_all = np.concatenate([result.v_data, result.v_fit])
+    label_y = v_all.max() + 0.05 * (v_all.max() - v_all.min())
     for k, tp in enumerate(result.secondary_peaks, start=2):
-        vp = plasma_guiding_model(np.array([tp]), **result.params)[0]
         ax_main.axvline(tp, color="orange", lw=1.2, ls="--", alpha=0.8)
         ax_main.text(
             tp,
-            ax_main.get_ylim()[1] if ax_main.get_ylim()[1] != 1.0 else peak_v * 0.7,
+            label_y,
             f"{k}fmax",
             fontsize=8,
             color="darkorange",
